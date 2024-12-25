@@ -4,24 +4,30 @@
 
 // Use Express library
 
-import express, { Request, Response } from 'express';
+import express, { Request, Response } from "express";
 const app = express();
 
 app.use(express.json());
 
 const users: { name: string }[] = [];
 
-app.post('/user', (req: Request, res: Response) => {
-    res.status(200).send();
+app.post("/user", (req: Request, res: Response) => {
+  const { name } = req.body;
+  if (name) {
+    users.push({ name });
+    res.status(201).send({ message: "User added successfully" });
+  } else {
+    res.status(400).send({ message: "Name is required" });
+  }
 });
 
-app.get('/users', (req: Request, res: Response) => {
-    res.status(200).json(users);
+app.get("/users", (req: Request, res: Response) => {
+  res.status(200).json(users);
 });
 
-if (process.env.NODE_ENV !== 'test') {
-    const PORT = 3000;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+if (process.env.NODE_ENV !== "test") {
+  const PORT = 3000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 
 export default app;
